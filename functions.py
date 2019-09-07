@@ -42,14 +42,23 @@ class Functions(object):
             exit()
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE and self.stats.game_active:
-                bullet = Bullet(self.settings, self.screen, self.ship)
-                bullet.add(self.bullets)
+                self.add_bullet()
+                pygame.time.set_timer(pygame.USEREVENT, self.settings.fire_millisecond)
             elif event.key == pygame.K_p:
                 self.play_game()
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_SPACE:
+                pygame.time.set_timer(pygame.USEREVENT, 0)
         elif event.type == pygame.MOUSEBUTTONDOWN and not self.stats.game_active:
             mouse_point = pygame.mouse.get_pos()
             if self.button.rect.collidepoint(mouse_point):
                 self.play_game()
+        elif event.type == pygame.USEREVENT:
+            self.add_bullet()
+
+    def add_bullet(self):
+        bullet = Bullet(self.settings, self.screen, self.ship)
+        bullet.add(self.bullets)
 
     def play_game(self):
         pygame.mouse.set_visible(False)
@@ -92,6 +101,7 @@ class Functions(object):
         if self.stats.ship_life < 0:
             pygame.mouse.set_visible(True)
             self.stats.game_active = False
+            pygame.time.set_timer(pygame.USEREVENT, 0)
         sleep(0.5)
 
     def update_screen(self):

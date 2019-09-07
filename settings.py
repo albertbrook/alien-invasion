@@ -26,6 +26,8 @@ class Settings(object):
         self.spend_scale = 1.1
         self.score_scale = 1.5
 
+        self.fire_millisecond = 200
+
         self.initialize_dynamic_settings()
 
     def initialize_dynamic_settings(self):
